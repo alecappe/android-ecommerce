@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import sophia.com.ecommerce2.data.Category;
+import sophia.com.ecommerce2.data.Item;
 
 /**
  * Created by archimede on 26/06/17.
@@ -21,12 +22,13 @@ public class EcommerceOpenHelper extends SQLiteOpenHelper {
     private SQLiteDatabase mReadableDB;
 
     ContentValues values = new ContentValues();
+    ContentValues valuesItem = new ContentValues();
 
     // It's a good idea to always define a log tag like this.
     private static final String TAG = EcommerceOpenHelper.class.getSimpleName();
 
     // has to be 1 first time or app will crash
-    private static final int DATABASE_VERSION = 1;
+    private static final int DATABASE_VERSION = 4;
     public static final String CATEGORY_TABLE = "category";
     public static final String ITEM_TABLE = "item";
     private static final String DATABASE_NAME = "ecommerce";
@@ -40,7 +42,7 @@ public class EcommerceOpenHelper extends SQLiteOpenHelper {
     // Column names ITEM
     public static final String KEY_ITEM_ID = "_id";
     public static final String KEY_ITEM_CATEGORY = "category";
-    public static final String KEY_ITEM_NAME = "name";
+    public static final String KEY_ITEM_NAME = "name_prod";
     public static final String KEY_ITEM_DESCRIPTION = "description";
     public static final String KEY_ITEM_PRICE = "price";
     public static final String KEY_ITEM_PHOTO = "photoPath";
@@ -66,7 +68,7 @@ public class EcommerceOpenHelper extends SQLiteOpenHelper {
             "CREATE  TABLE " + ITEM_TABLE + " (" +
                     KEY_ITEM_ID + " INTEGER PRIMARY KEY, " +
                     KEY_ITEM_CATEGORY + " INTEGER, " +
-                    KEY_ITEM_NAME + "VARCHAR NOT NULL , " +
+                    KEY_ITEM_NAME + " VARCHAR NOT NULL , " +
                     KEY_ITEM_DESCRIPTION + " TEXT, " +
                     KEY_ITEM_PRICE + " DOUBLE NOT NULL , " +
                     KEY_ITEM_PHOTO + " VARCHAR);";
@@ -75,17 +77,19 @@ public class EcommerceOpenHelper extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
 
         db.execSQL(CATEGORY_TABLE_CREATE);
+        db.execSQL(ITEM_TABLE_CREATE);
         fillDatabaseWithData(db);
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        fillDatabaseWithData(db);
 
         Log.w(EcommerceOpenHelper.class.getName(),
                 "Upgrading database from version " + oldVersion + " to "
                         + newVersion + ", which will destroy all old data");
         db.execSQL("DROP TABLE IF EXISTS " + CATEGORY_TABLE);
+        db.execSQL("DROP TABLE IF EXISTS " + ITEM_TABLE);
+
         onCreate(db);
     }
 
@@ -95,8 +99,21 @@ public class EcommerceOpenHelper extends SQLiteOpenHelper {
             values.put(KEY_SUBTITLE, "SubTitle Category " + i);
             values.put(KEY_IMAGE, "http://lorempixel.com/400/400/abstract/1");
 
-            db.insert(EcommerceOpenHelper.CATEGORY_TABLE, null, values);
+            db.insert(CATEGORY_TABLE, null, values);
         }
+
+        for (int i = 0; i < 20; i++){
+            valuesItem.put(KEY_ITEM_NAME, "Item name" + i);
+            valuesItem.put(KEY_ITEM_DESCRIPTION, "Description item " + i);
+            valuesItem.put(KEY_ITEM_PRICE, 2 * i + 1);
+            valuesItem.put(KEY_IMAGE, "http://lorempixel.com/400/400/abstract/2");
+            valuesItem.put(KEY_ITEM_CATEGORY, i + 1);
+
+            db.insert(ITEM_TABLE, null, valuesItem);
+        }
+
+
+
     }
 
     public Category queryCategory(int position){
@@ -120,6 +137,38 @@ public class EcommerceOpenHelper extends SQLiteOpenHelper {
             entry.setTitle(cursor.getString(cursor.getColumnIndex(KEY_TITLE)));
             entry.setSubTitle(cursor.getString(cursor.getColumnIndex(KEY_SUBTITLE)));
             entry.setImagePath(cursor.getString(cursor.getColumnIndex(KEY_IMAGE)));
+
+        } catch (Exception e) {
+            Log.d(TAG, "EXCEPTION! " + e);
+        } finally {
+            cursor.close();
+            return entry;
+        }
+    }
+
+    public Item queryItem(int position){
+        String query = "SELECT  * FROM " + ITEM_TABLE +
+                " ORDER BY " + KEY_ITEM_NAME + " ASC " +
+                "LIMIT " + position + ",1";
+
+        Cursor cursor = null;
+        Item entry = new Item();
+
+        try {
+            if (mReadableDB == null) {
+                mReadableDB = getReadableDatabase();
+            }
+
+            cursor = mReadableDB.rawQuery(query, null);
+
+            cursor.moveToFirst();
+
+            entry.setmId(cursor.getInt(cursor.getColumnIndex(KEY_ID)));
+            entry.setName(cursor.getString(cursor.getColumnIndex(KEY_ITEM_NAME)));
+            entry.setDescription(cursor.getString(cursor.getColumnIndex(KEY_ITEM_DESCRIPTION)));
+            entry.setPhotoItem(cursor.getString(cursor.getColumnIndex(KEY_ITEM_PHOTO)));
+
+            entry.setCategory(cursor.getInt(cursor.getColumnIndex(KEY_ITEM_CATEGORY)));
 
         } catch (Exception e) {
             Log.d(TAG, "EXCEPTION! " + e);
@@ -164,4 +213,45 @@ public class EcommerceOpenHelper extends SQLiteOpenHelper {
         }
 
     }
+
+    public List<Item> getAllItem() {
+        List<Item> listItem = new ArrayList<>();
+        String query = "SELECT  * FROM " + ITEM_TABLE;
+
+        Cursor cursor = null;
+
+
+        try {
+            if (mReadableDB == null) {
+                mReadableDB = getReadableDatabase();
+            }
+
+            cursor = mReadableDB.rawQuery(query, null);
+
+            cursor.moveToFirst();
+
+            while(cursor.moveToNext()){
+                Item entry = new Item();
+
+                entry.setmId(cursor.getInt(cursor.getColumnIndex(KEY_ID)));
+                entry.setName(cursor.getString(cursor.getColumnIndex(KEY_ITEM_NAME)));
+                entry.setDescription(cursor.getString(cursor.getColumnIndex(KEY_ITEM_DESCRIPTION)));
+                entry.setPhotoItem(cursor.getString(cursor.getColumnIndex(KEY_ITEM_PHOTO)));
+
+                entry.setCategory(cursor.getInt(cursor.getColumnIndex(KEY_ITEM_CATEGORY)));
+                listItem.add(entry);
+            }
+
+
+
+        } catch (Exception e) {
+            Log.d(TAG, "EXCEPTION! " + e);
+        } finally {
+            cursor.close();
+            return listItem;
+        }
+
+    }
+
+
 }
