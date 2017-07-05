@@ -20,8 +20,8 @@
 
             <ImageView
                 android:id="@+id/image_category"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
                 card_view:srcCompat="@drawable/ic_directions_bike_black_24dp" />
 
             <LinearLayout

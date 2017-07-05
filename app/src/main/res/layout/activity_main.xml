@@ -11,6 +11,11 @@
         android:layout_height="wrap_content"
         android:onClick="buttonOnClick"
         android:text="GO!"/>
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:onClick="buttonLogOut"
+        android:text="Log Out"/>
     <TextView
         android:id="@+id/welcome_message"
         android:layout_width="match_parent"

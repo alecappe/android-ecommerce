@@ -43,10 +43,12 @@ public class ProductListAdapter extends RecyclerView.Adapter<ProductListAdapter.
         TextView priceView = (TextView) v.findViewById(R.id.price);
         ImageView imageView = (ImageView) v.findViewById(R.id.image_item);
 
+
         v.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d("OnClickListner", v.getTag().toString());
+                Log.d("OnClickListner item", v.getTag().toString());
+
                 if(listener != null){
                     listener.OnItemClick((int)v.getTag());
 
