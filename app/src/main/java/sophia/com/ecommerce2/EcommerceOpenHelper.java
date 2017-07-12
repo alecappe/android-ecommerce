@@ -3,6 +3,7 @@ package sophia.com.ecommerce2;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
@@ -254,4 +255,59 @@ public class EcommerceOpenHelper extends SQLiteOpenHelper {
     }
 
 
+    public void addOrUpdate(Category category) {
+
+        if (mReadableDB == null) {
+            mReadableDB = getReadableDatabase();
+        }
+
+        if (mWritableDB == null) {
+            mWritableDB = getWritableDatabase();
+        }
+
+        ContentValues values = new ContentValues();
+        values.put(KEY_ID, category.getmId());
+        values.put(KEY_TITLE, category.getTitle());
+        values.put(KEY_SUBTITLE, category.getSubTitle());
+        values.put(KEY_IMAGE, category.getImagePath());
+
+        String[] args =  new String[]{String.valueOf(category.getmId())};
+
+        long c = DatabaseUtils.queryNumEntries(mReadableDB,CATEGORY_TABLE,KEY_ID + " =?",args);
+
+        if (c>0)
+            mWritableDB.update(CATEGORY_TABLE,values,KEY_ID + " = ?",args);
+        else
+            mWritableDB.insert(CATEGORY_TABLE,null,values);
+
+    }
+
+    public void addOrUpdate(Item item) {
+
+        if (mReadableDB == null) {
+            mReadableDB = getReadableDatabase();
+        }
+
+        if (mWritableDB == null) {
+            mWritableDB = getWritableDatabase();
+        }
+
+        ContentValues values = new ContentValues();
+        values.put(KEY_ITEM_ID, item.getmId());
+        values.put(KEY_ITEM_NAME, item.getName());
+        values.put(KEY_ITEM_DESCRIPTION, item.getDescription());
+        values.put(KEY_ITEM_PRICE, item.getPrice());
+        values.put(KEY_ITEM_PHOTO, item.getPhotoItem());
+        values.put(KEY_ITEM_CATEGORY, item.getCategory());
+
+        String[] args =  new String[]{String.valueOf(item.getmId())};
+
+        long c = DatabaseUtils.queryNumEntries(mReadableDB,ITEM_TABLE,KEY_ID + " =?",args);
+
+        if (c>0)
+            mWritableDB.update(ITEM_TABLE,values,KEY_ID + " = ?",args);
+        else
+            mWritableDB.insert(ITEM_TABLE,null,values);
+
+    }
 }

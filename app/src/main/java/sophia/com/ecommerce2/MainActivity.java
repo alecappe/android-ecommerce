@@ -5,17 +5,20 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.support.design.widget.Snackbar;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import retrofit2.Call;
 import retrofit2.Response;
@@ -30,6 +33,7 @@ public class MainActivity extends AppCompatActivity implements OnAdapterItemClic
     private RecyclerView categoryRecyclerView;
     private TextView welcomeMessage;
     List<Category> categoryList = new ArrayList<>();
+    private ProgressBar progressBar;
 
     private SharedPreferences preferences;
 
@@ -41,13 +45,13 @@ public class MainActivity extends AppCompatActivity implements OnAdapterItemClic
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        progressBar = (ProgressBar) findViewById(R.id.progressBar2);
 
-//        mDB = new EcommerceOpenHelper(this);
+        mDB = new EcommerceOpenHelper(this);
 
         //Esegue il CategoryTask all'avvio dell'Intent
         mTask = new CategoryTask();
         mTask.execute((Void) null);
-
 
         preferences = getSharedPreferences("ecommerce",MODE_PRIVATE);
 
@@ -75,15 +79,15 @@ public class MainActivity extends AppCompatActivity implements OnAdapterItemClic
         categoryRecyclerView.setLayoutManager((mLayoutManager));
 
         //Con questo si va a leggere le categorie da db
-        //categoryList = mDB.getAllCategory();
+        categoryList = mDB.getAllCategory();
 
         categoryRecyclerView.setHasFixedSize(true);
 // Questa parte serve se ho un database o dati in locale
-//
-//        Context context;
-//        CategoryAdapter categoryRecyclerViewAdapter = new CategoryAdapter(this, categoryList);
-//
-//        categoryRecyclerView.setAdapter(categoryRecyclerViewAdapter);
+
+        Context context;
+        CategoryAdapter categoryRecyclerViewAdapter = new CategoryAdapter(this, categoryList);
+
+        categoryRecyclerView.setAdapter(categoryRecyclerViewAdapter);
     }
 
 
@@ -95,6 +99,16 @@ public class MainActivity extends AppCompatActivity implements OnAdapterItemClic
         Intent i = new Intent(this, ProductListActivity.class);
         i.putExtra("CategoryId", id);
         startActivity(i);
+    }
+
+    @Override
+    public void OnItemAddToCart(int position) {
+
+    }
+
+    @Override
+    public void OnItemRemoveToCart(int position) {
+
     }
 
     @Override
@@ -118,12 +132,14 @@ public class MainActivity extends AppCompatActivity implements OnAdapterItemClic
 
 
     public void buttonOnClick(View view) {
-        SharedPreferences preferences = getSharedPreferences("ecommerce", MODE_PRIVATE);
-        boolean b = preferences.getBoolean("firstUser",true);
-
-        SharedPreferences.Editor editor = preferences.edit();
-        editor.putBoolean("firstUser", !b);
-        editor.apply();
+        Intent i = new Intent(MainActivity.this, ShoppingCartActivity.class);
+        startActivity(i);
+//        SharedPreferences preferences = getSharedPreferences("ecommerce", MODE_PRIVATE);
+//        boolean b = preferences.getBoolean("firstUser",true);
+//
+//        SharedPreferences.Editor editor = preferences.edit();
+//        editor.putBoolean("firstUser", !b);
+//        editor.apply();
     }
 
     public void buttonLogOut(View view) {
@@ -138,7 +154,12 @@ public class MainActivity extends AppCompatActivity implements OnAdapterItemClic
         finish();
     }
 
-    public class CategoryTask extends AsyncTask<Void, Void, List<Category>>{
+    public class CategoryTask extends AsyncTask<Void, Integer, List<Category>>{
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            progressBar.setVisibility(View.VISIBLE);
+        }
 
         @Override
         protected List<Category> doInBackground(Void... params) {
@@ -154,7 +175,15 @@ public class MainActivity extends AppCompatActivity implements OnAdapterItemClic
             try{
                 Response<List<Category>> listResponse = listCall.execute();
                 if(listResponse.isSuccessful()){
-                    return listResponse.body();
+                    List<Category> catList = listResponse.body();
+                    int counter = 0;
+                    for (Category category : catList) {
+                        counter ++;
+                        mDB.addOrUpdate(category);
+                        publishProgress(counter,catList.size());
+                    }
+
+                    return mDB.getAllCategory();
                 }
             } catch (IOException e) {
                 e.printStackTrace();
@@ -163,6 +192,12 @@ public class MainActivity extends AppCompatActivity implements OnAdapterItemClic
             return null;
         }
 
+        @Override
+        protected void onProgressUpdate(Integer... values) {
+            super.onProgressUpdate(values);
+            progressBar.setMax(values[1]);
+            progressBar.setProgress(1);
+        }
 
         @Override
         protected void onPostExecute(List<Category> categories) {
@@ -171,6 +206,8 @@ public class MainActivity extends AppCompatActivity implements OnAdapterItemClic
             categoryList = categories;
             CategoryAdapter categoryRecyclerViewAdapter = new CategoryAdapter(MainActivity.this, categoryList);
             categoryRecyclerView.setAdapter(categoryRecyclerViewAdapter);
+            progressBar.setVisibility(View.GONE);
         }
     }
+
 }

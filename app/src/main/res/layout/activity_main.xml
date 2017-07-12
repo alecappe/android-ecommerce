@@ -6,11 +6,20 @@
     android:orientation="vertical"
     tools:context="sophia.com.ecommerce2.MainActivity">
 
+
+    <ProgressBar
+        android:id="@+id/progressBar2"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        />
+
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:onClick="buttonOnClick"
-        android:text="GO!"/>
+        android:text="Vai al carrello"/>
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -29,6 +38,5 @@
         android:scrollbars="vertical"
         android:id="@+id/recycler_view">
     </android.support.v7.widget.RecyclerView>
-
 
 </LinearLayout>

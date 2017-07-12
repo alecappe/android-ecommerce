@@ -6,4 +6,7 @@ package sophia.com.ecommerce2.adapter;
 
 public interface OnAdapterItemClickListener {
     void OnItemClick(int position);
+    void OnItemAddToCart(int position);
+    void OnItemRemoveToCart(int position);
+
 }

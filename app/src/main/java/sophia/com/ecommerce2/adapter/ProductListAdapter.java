@@ -6,6 +6,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -26,7 +27,7 @@ public class ProductListAdapter extends RecyclerView.Adapter<ProductListAdapter.
     private List<Item> mDataSet;
     private Context context;
     private OnAdapterItemClickListener listener;
-    private NumberFormat nf = NumberFormat.getCurrencyInstance(Locale.ITALIAN);
+    private NumberFormat nf = NumberFormat.getCurrencyInstance(Locale.ITALY);
 
     public ProductListAdapter(Context context, List<Item> mDataSet) {
         this.context = context;
@@ -42,6 +43,7 @@ public class ProductListAdapter extends RecyclerView.Adapter<ProductListAdapter.
         TextView descriptionView = (TextView) v.findViewById(R.id.description_item);
         TextView priceView = (TextView) v.findViewById(R.id.price);
         ImageView imageView = (ImageView) v.findViewById(R.id.image_item);
+        ImageButton buttonBuy = (ImageButton) v.findViewById(R.id.button_buy);
 
 
         v.setOnClickListener(new View.OnClickListener() {
@@ -56,7 +58,18 @@ public class ProductListAdapter extends RecyclerView.Adapter<ProductListAdapter.
             }
         });
 
-        ViewHolder vh = new ViewHolder(v, nameView, descriptionView, priceView, imageView);
+        buttonBuy.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d("Add to Cart", "Aggiunto");
+
+                if(listener != null){
+                    listener.OnItemAddToCart((int) v.getTag());
+                }
+            }
+        });
+
+        ViewHolder vh = new ViewHolder(v, nameView, descriptionView, priceView, imageView, buttonBuy);
         return vh;
     }
 
@@ -72,6 +85,8 @@ public class ProductListAdapter extends RecyclerView.Adapter<ProductListAdapter.
 
         }
         holder.itemView.setTag(position);
+        holder.buttonBuy.setTag(position);
+
     }
 
     @Override
@@ -84,16 +99,15 @@ public class ProductListAdapter extends RecyclerView.Adapter<ProductListAdapter.
         public TextView description;
         public TextView price;
         public ImageView imageView;
+        public ImageButton buttonBuy;
 
-        public ViewHolder(View v, TextView name, TextView description, TextView price, ImageView imageView) {
+        public ViewHolder(View v, TextView name, TextView description, TextView price, ImageView imageView, ImageButton buttonBuy) {
             super(v);
             this.name = name;
             this.description = description;
             this.price = price;
             this.imageView = imageView;
-
+            this.buttonBuy = buttonBuy;
         }
-
-
     }
 }
