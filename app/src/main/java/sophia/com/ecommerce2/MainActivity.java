@@ -59,7 +59,7 @@ public class MainActivity extends AppCompatActivity implements OnAdapterItemClic
         boolean b = preferences.getBoolean("firstUser",true);
 
         if (b){
-            welcomeMessage.setVisibility(View.VISIBLE);
+            welcomeMessage.setVisibility(View.GONE); //Dovrebbe essere VISIBILY ma non lo voglio vedere ora
         }
 
         SharedPreferences.Editor editor = preferences.edit();

@@ -21,23 +21,32 @@
         android:orientation="horizontal">
 
         <TextView
-            android:layout_weight="0.2"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="Totale " />
+            android:layout_weight="0.2"
+            android:text="Totale "
+            android:textAllCaps="false"
+            android:textSize="25dp"
+            android:textStyle="bold|italic" />
 
         <TextView
             android:id="@+id/total_price"
             android:layout_width="0dp"
+            android:layout_height="wrap_content"
             android:layout_weight="0.6"
-            android:layout_height="wrap_content" />
+            android:textSize="30dp"
+            android:textStyle="bold" />
 
         <Button
             android:id="@+id/button_buy"
             android:layout_width="0dp"
-            android:layout_weight="0.2"
             android:layout_height="wrap_content"
-            android:text="BUY"/>
+            android:layout_weight="0.2"
+            android:background="@android:color/transparent"
+            android:text="BUY"
+            android:textSize="16dp"
+            android:textColor="?attr/actionModeSplitBackground"
+            android:textStyle="bold" />
     </LinearLayout>
 
 

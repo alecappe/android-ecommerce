@@ -53,16 +53,19 @@
             <Button
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="SHARE"
-                android:textSize="20dp" />
+                android:background="@android:color/transparent"
+                android:textColor="@color/colorAccent"
+                android:text="SHARE"/>
 
-            <ImageButton
+            <Button
+                android:id="@+id/add_to_cart"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"
-                android:background="@mipmap/ic_launcher"
+                android:background="@android:color/transparent"
                 android:elevation="0dp"
-                android:src="@drawable/ic_shopping_cart_black_24dp" />
+                android:text="add to cart"
+                android:textColor="@color/colorAccent" />
 
 
         </LinearLayout>

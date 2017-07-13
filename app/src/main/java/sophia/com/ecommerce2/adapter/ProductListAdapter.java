@@ -6,6 +6,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -43,7 +44,7 @@ public class ProductListAdapter extends RecyclerView.Adapter<ProductListAdapter.
         TextView descriptionView = (TextView) v.findViewById(R.id.description_item);
         TextView priceView = (TextView) v.findViewById(R.id.price);
         ImageView imageView = (ImageView) v.findViewById(R.id.image_item);
-        ImageButton buttonBuy = (ImageButton) v.findViewById(R.id.button_buy);
+        Button buttonBuy = (Button) v.findViewById(R.id.button_buy);
 
 
         v.setOnClickListener(new View.OnClickListener() {
@@ -99,9 +100,9 @@ public class ProductListAdapter extends RecyclerView.Adapter<ProductListAdapter.
         public TextView description;
         public TextView price;
         public ImageView imageView;
-        public ImageButton buttonBuy;
+        public Button buttonBuy;
 
-        public ViewHolder(View v, TextView name, TextView description, TextView price, ImageView imageView, ImageButton buttonBuy) {
+        public ViewHolder(View v, TextView name, TextView description, TextView price, ImageView imageView, Button buttonBuy) {
             super(v);
             this.name = name;
             this.description = description;
