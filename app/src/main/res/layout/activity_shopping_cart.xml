@@ -44,6 +44,7 @@
             android:layout_weight="0.2"
             android:background="@android:color/transparent"
             android:text="BUY"
+            android:onClick="buttonBuyClick"
             android:textSize="16dp"
             android:textColor="?attr/actionModeSplitBackground"
             android:textStyle="bold" />

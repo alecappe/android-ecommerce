@@ -28,9 +28,15 @@ public class ShoppingCartAdapter extends RecyclerView.Adapter<ShoppingCartAdapte
     private Context context;
     private OnAdapterItemClickListener listener;
     private NumberFormat nf = NumberFormat.getCurrencyInstance(Locale.ITALY);
+    private boolean showRemoveButton;
 
+    public ShoppingCartAdapter(Context context, boolean showRemoveButton) {
+        this.context = context;
+        this.showRemoveButton = showRemoveButton;
+    }
 
     public ShoppingCartAdapter(Context context) {
+        this.showRemoveButton = true;
         this.context = context;
         this.listener = (OnAdapterItemClickListener) context;
     }
@@ -44,6 +50,7 @@ public class ShoppingCartAdapter extends RecyclerView.Adapter<ShoppingCartAdapte
         TextView itemView = (TextView) v.findViewById(R.id.item_name);
         TextView priceView = (TextView) v.findViewById(R.id.item_price);
         Button removeItem = (Button) v.findViewById(R.id.remove_item);
+
 
 
         v.setOnClickListener(new View.OnClickListener() {
@@ -69,6 +76,11 @@ public class ShoppingCartAdapter extends RecyclerView.Adapter<ShoppingCartAdapte
         });
 
         ViewHolder vh = new ViewHolder(v, itemView, priceView, imageView, removeItem);
+        if (showRemoveButton)
+            vh.removeItem.setVisibility(View.VISIBLE);
+        else
+            vh.removeItem.setVisibility(View.GONE);
+
         return vh;
     }
 

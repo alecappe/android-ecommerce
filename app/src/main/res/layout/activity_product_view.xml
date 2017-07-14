@@ -63,9 +63,9 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"
                 android:background="@android:color/transparent"
+                android:textColor="@color/colorAccent"
                 android:elevation="0dp"
-                android:text="add to cart"
-                android:textColor="@color/colorAccent" />
+                android:text="Aggiungi al carrello"/>
 
 
         </LinearLayout>

@@ -9,6 +9,7 @@ import retrofit2.http.Headers;
 import retrofit2.http.POST;
 import retrofit2.http.Path;
 import sophia.com.ecommerce2.data.Category;
+import sophia.com.ecommerce2.data.ConfirmOrder;
 import sophia.com.ecommerce2.data.Item;
 import sophia.com.ecommerce2.data.User;
 import sophia.com.ecommerce2.data.UserRequest;
@@ -35,6 +36,9 @@ public interface EcommerceService {
     @Headers("Content-Type: application/json")
     @GET("item/{id}")
     Call<Item> item(@Path("id") int id);
+
+    @POST("order")
+    Call<ConfirmOrder> confirmOrder(@Body ConfirmOrder order);
 
 
 
