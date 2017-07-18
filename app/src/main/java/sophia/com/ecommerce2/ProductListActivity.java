@@ -22,7 +22,7 @@ import sophia.com.ecommerce2.adapter.ProductListAdapter;
 import sophia.com.ecommerce2.data.Item;
 import sophia.com.ecommerce2.network.EcommerceService;
 
-public class ProductListActivity extends AppCompatActivity implements OnAdapterItemClickListener{
+public class ProductListActivity extends BaseActivity implements OnAdapterItemClickListener{
     private RecyclerView productRecyclerView;
     private EcommerceOpenHelper mDB;
     private List<Item> itemList;

@@ -24,7 +24,7 @@ import sophia.com.ecommerce2.data.Item;
  * Created by archimede on 12/07/17.
  */
 
-public class ShoppingCartAdapter extends RecyclerView.Adapter<ShoppingCartAdapter.ViewHolder> implements OnAdapterItemClickListener{
+public class ShoppingCartAdapter extends RecyclerView.Adapter<ShoppingCartAdapter.ViewHolder>{
     private Context context;
     private OnAdapterItemClickListener listener;
     private NumberFormat nf = NumberFormat.getCurrencyInstance(Locale.ITALY);
@@ -101,21 +101,6 @@ public class ShoppingCartAdapter extends RecyclerView.Adapter<ShoppingCartAdapte
     @Override
     public int getItemCount() {
         return ShoppingCart.getInstance().getCart().size();
-    }
-
-    @Override
-    public void OnItemClick(int position) {
-
-    }
-
-    @Override
-    public void OnItemAddToCart(int position) {
-
-    }
-
-    @Override
-    public void OnItemRemoveToCart(int position) {
-
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {

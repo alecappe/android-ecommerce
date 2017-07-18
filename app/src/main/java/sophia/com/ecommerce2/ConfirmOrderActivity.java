@@ -73,10 +73,16 @@ public class ConfirmOrderActivity extends AppCompatActivity {
                 order.setCity(city);
                 List<Item> listItem = ShoppingCart.getInstance().getCart();
                 order.setCart(listItem);
+                order.setOrderNumber(577);
 
-
+//TODO: Salva su DB ordine..
                 mTask = new OrdersTask();
                 mTask.execute(order);
+
+
+
+
+
 
 
 
@@ -90,8 +96,9 @@ public class ConfirmOrderActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(Boolean aBoolean) {
             super.onPostExecute(aBoolean);
-            if (aBoolean){
+            //TODO: Invio ordine al server, se ok cancello il carrello
 
+            if (aBoolean){
                 Intent i = new Intent(ConfirmOrderActivity.this, OrderDone.class);
                 i.putExtra("name", name);
                 i.putExtra("surname", surname);
@@ -121,6 +128,8 @@ public class ConfirmOrderActivity extends AppCompatActivity {
             try{
                 Response<ConfirmOrder> orderResponse = orderCall.execute();
                 if (orderResponse.isSuccessful()) {
+                    orderResponse.body();
+
                     return true;
                 }
                 else{

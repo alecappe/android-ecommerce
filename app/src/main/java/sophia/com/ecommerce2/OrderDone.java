@@ -5,11 +5,16 @@ import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
+import android.view.View;
 import android.widget.TextView;
 
+import java.lang.reflect.Array;
+import java.util.ArrayList;
 import java.util.List;
 
 import sophia.com.ecommerce2.adapter.ShoppingCartAdapter;
+import sophia.com.ecommerce2.data.ConfirmOrder;
 import sophia.com.ecommerce2.data.Item;
 
 public class OrderDone extends AppCompatActivity {
@@ -18,13 +23,17 @@ public class OrderDone extends AppCompatActivity {
     private String address;
     private String city;
     private List<Item> cart;
+    private EcommerceOpenHelper mDb;
 
     private RecyclerView shoppingCartRecyclerView;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_order_done);
+        mDb = new EcommerceOpenHelper(this);
 
         TextView userName = (TextView)findViewById(R.id.user);
         TextView userAddress = (TextView)findViewById(R.id.address);
@@ -38,9 +47,15 @@ public class OrderDone extends AppCompatActivity {
 
         shoppingCartRecyclerView = (RecyclerView)findViewById(R.id.order_recycler);
         LinearLayoutManager mLayoutManager = new LinearLayoutManager((this));
+        List<Item> itemList = new ArrayList<>();
+        itemList = mDb.getOrder(577);
+        Log.d("LISTA: ", String.valueOf(itemList));
+        ShoppingCart.getInstance().getCart().clear();
+
         shoppingCartRecyclerView.setLayoutManager(mLayoutManager);
         ShoppingCartAdapter shoppingCartAdapter = new ShoppingCartAdapter(this, false);
         shoppingCartRecyclerView.setAdapter(shoppingCartAdapter);
+
 
     }
 }

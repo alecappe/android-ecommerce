@@ -11,6 +11,9 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -29,9 +32,10 @@ import sophia.com.ecommerce2.adapter.OnAdapterItemClickListener;
 import sophia.com.ecommerce2.data.Category;
 import sophia.com.ecommerce2.network.EcommerceService;
 
-public class MainActivity extends AppCompatActivity implements OnAdapterItemClickListener, SharedPreferences.OnSharedPreferenceChangeListener {
+public class MainActivity extends BaseActivity implements OnAdapterItemClickListener, SharedPreferences.OnSharedPreferenceChangeListener {
     private RecyclerView categoryRecyclerView;
     private TextView welcomeMessage;
+
     List<Category> categoryList = new ArrayList<>();
     private ProgressBar progressBar;
 
@@ -131,28 +135,28 @@ public class MainActivity extends AppCompatActivity implements OnAdapterItemClic
     }
 
 
-    public void buttonOnClick(View view) {
-        Intent i = new Intent(MainActivity.this, ShoppingCartActivity.class);
-        startActivity(i);
+//    public void buttonOnClick(View view) {
+//        Intent i = new Intent(MainActivity.this, ShoppingCartActivity.class);
+//        startActivity(i);
 //        SharedPreferences preferences = getSharedPreferences("ecommerce", MODE_PRIVATE);
 //        boolean b = preferences.getBoolean("firstUser",true);
 //
 //        SharedPreferences.Editor editor = preferences.edit();
 //        editor.putBoolean("firstUser", !b);
 //        editor.apply();
-    }
+//    }
 
-    public void buttonLogOut(View view) {
-        Intent i = new Intent(MainActivity.this, LoginActivity.class);
-
-        preferences = getSharedPreferences("ecommerce", MODE_PRIVATE);
-        SharedPreferences.Editor editor = preferences.edit();
-        editor.putInt("userId", -1);
-        editor.apply();
-
-        startActivity(i);
-        finish();
-    }
+//    public void buttonLogOut(View view) {
+//        Intent i = new Intent(MainActivity.this, LoginActivity.class);
+//
+//        preferences = getSharedPreferences("ecommerce", MODE_PRIVATE);
+//        SharedPreferences.Editor editor = preferences.edit();
+//        editor.putInt("userId", -1);
+//        editor.apply();
+//
+//        startActivity(i);
+//        finish();
+//    }
 
     public class CategoryTask extends AsyncTask<Void, Integer, List<Category>>{
         @Override

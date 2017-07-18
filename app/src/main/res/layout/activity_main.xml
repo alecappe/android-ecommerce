@@ -14,22 +14,6 @@
         android:layout_height="wrap_content"
         android:visibility="gone" />
 
-    <Button
-        android:id="@+id/button"
-        android:background="@color/colorAccentRed"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:onClick="buttonLogOut"
-        android:text="Log Out" />
-
-    <Button
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@android:color/transparent"
-        android:onClick="buttonOnClick"
-        android:text="go to cart"
-        android:textColor="@color/colorAccent" />
-
     <TextView
         android:id="@+id/welcome_message"
         android:layout_width="match_parent"

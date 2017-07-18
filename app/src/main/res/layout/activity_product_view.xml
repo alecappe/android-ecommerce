@@ -65,7 +65,7 @@
                 android:background="@android:color/transparent"
                 android:textColor="@color/colorAccent"
                 android:elevation="0dp"
-                android:text="Aggiungi al carrello"/>
+                android:text="Add"/>
 
 
         </LinearLayout>

@@ -115,6 +115,8 @@ public class Item {
         this.category = category;
     }
 
-
-
+    @Override
+    protected Object clone() throws CloneNotSupportedException {
+        return super.clone();
+    }
 }

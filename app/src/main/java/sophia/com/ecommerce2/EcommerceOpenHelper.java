@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import sophia.com.ecommerce2.data.Category;
+import sophia.com.ecommerce2.data.ConfirmOrder;
 import sophia.com.ecommerce2.data.Item;
 
 /**
@@ -32,6 +33,7 @@ public class EcommerceOpenHelper extends SQLiteOpenHelper {
     private static final int DATABASE_VERSION = 8;
     public static final String CATEGORY_TABLE = "category";
     public static final String ITEM_TABLE = "item";
+    public static final String ORDER_TABLE = "order";
     private static final String DATABASE_NAME = "ecommerce";
 
     // Column names CATEGORY...
@@ -48,11 +50,16 @@ public class EcommerceOpenHelper extends SQLiteOpenHelper {
     public static final String KEY_ITEM_PRICE = "price";
     public static final String KEY_ITEM_PHOTO = "photoPath";
 
+    //Column names ORDER
+    public static final String KEY_ORDER_ID = "_id";
+    public static final String KEY_ORDER_NUMBER = "order_number";
+    public static final String KEY_ORDER_ITEM = "id_item";
 
 
     // ... and a string array of columns.
     private static final String[] COLUMNS = { KEY_ID, KEY_TITLE, KEY_SUBTITLE, KEY_IMAGE };
     private static final String[] COLUMNSITEM = { KEY_ITEM_ID, KEY_ITEM_CATEGORY, KEY_ITEM_NAME, KEY_ITEM_DESCRIPTION, KEY_ITEM_PRICE, KEY_ITEM_PHOTO };
+    private static final String[] COLUMNORDER = {KEY_ORDER_ID, KEY_ORDER_ITEM, KEY_ORDER_NUMBER};
 
     public EcommerceOpenHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -74,11 +81,18 @@ public class EcommerceOpenHelper extends SQLiteOpenHelper {
                     KEY_ITEM_PRICE + " DOUBLE NOT NULL , " +
                     KEY_ITEM_PHOTO + " VARCHAR);";
 
+    private static final String ORDER_TABLE_CREATE =
+            "CREATE TABLE " + ORDER_TABLE + " (" +
+                    KEY_ORDER_ID + " INTEGER PRIMARY KEY, " +
+                    KEY_ORDER_ITEM + " INTEGER, " +
+                    KEY_ORDER_NUMBER + " INTEGER);";
+
     @Override
     public void onCreate(SQLiteDatabase db) {
 
         db.execSQL(CATEGORY_TABLE_CREATE);
         db.execSQL(ITEM_TABLE_CREATE);
+        db.execSQL(ORDER_TABLE_CREATE);
         fillDatabaseWithData(db);
     }
 
@@ -90,6 +104,7 @@ public class EcommerceOpenHelper extends SQLiteOpenHelper {
                         + newVersion + ", which will destroy all old data");
         db.execSQL("DROP TABLE IF EXISTS " + CATEGORY_TABLE);
         db.execSQL("DROP TABLE IF EXISTS " + ITEM_TABLE);
+        db.execSQL("DROP TABLE IF EXISTS " + ORDER_TABLE);
 
         onCreate(db);
     }
@@ -180,6 +195,35 @@ public class EcommerceOpenHelper extends SQLiteOpenHelper {
         }
     }
 
+    public ConfirmOrder queryOrder(int position){
+        String query = "SELECT  * FROM " + ORDER_TABLE +
+                " GROUP BY " + KEY_ORDER_NUMBER;
+
+        Cursor cursor = null;
+        ConfirmOrder entry = new ConfirmOrder();
+
+        try {
+            if (mReadableDB == null) {
+                mReadableDB = getReadableDatabase();
+            }
+
+            cursor = mReadableDB.rawQuery(query, null);
+
+            cursor.moveToFirst();
+
+
+            entry.setmId(cursor.getInt(cursor.getColumnIndex(KEY_ORDER_ID)));
+            entry.setOrderNumber(cursor.getInt(cursor.getColumnIndex(KEY_ORDER_NUMBER)));
+            entry.setOrderItem(cursor.getInt(cursor.getColumnIndex(KEY_ORDER_ITEM)));
+
+        } catch (Exception e) {
+            Log.d(TAG, "EXCEPTION! " + e);
+        } finally {
+            cursor.close();
+            return entry;
+        }
+    }
+
     public List<Category> getAllCategory() {
         List<Category> listCategory = new ArrayList<>();
         String query = "SELECT  * FROM " + CATEGORY_TABLE;
@@ -254,6 +298,44 @@ public class EcommerceOpenHelper extends SQLiteOpenHelper {
 
     }
 
+    public List<Item> getOrder(int orderNum){
+
+        ConfirmOrder order = new ConfirmOrder();
+//        order.setCart();
+        List<Item> list = new ArrayList<>();
+
+//        List<ConfirmOrder> orders = null;
+        String query = "SELECT  * FROM " + ORDER_TABLE + " WHERE order_number = " + orderNum;
+
+        Cursor cursor = null;
+        try {
+            if (mReadableDB == null) {
+                mReadableDB = getReadableDatabase();
+            }
+
+            cursor = mReadableDB.rawQuery(query, null);
+
+            //cursor.moveToFirst();
+
+            while(cursor.moveToNext()){
+                //ConfirmOrder entry = new ConfirmOrder();
+                Item i = queryItem(cursor.getInt(cursor.getColumnIndex(KEY_ORDER_ITEM)));
+                list.add(i);
+//                entry.setmId(cursor.getInt(cursor.getColumnIndex(KEY_ID)));
+//                entry.setOrderItem(cursor.getInt(cursor.getColumnIndex(KEY_ORDER_ITEM)));
+//                entry.setOrderNumber(cursor.getInt(cursor.getColumnIndex(KEY_ORDER_NUMBER)));
+
+
+                //orders.add(entry);
+            }
+
+        } catch (Exception e) {
+            Log.d(TAG, "EXCEPTION! " + e);
+        } finally {
+            cursor.close();
+            return list;
+        }
+    }
 
     public void addOrUpdate(Category category) {
 
@@ -303,6 +385,33 @@ public class EcommerceOpenHelper extends SQLiteOpenHelper {
         String[] args =  new String[]{String.valueOf(item.getmId())};
 
         long c = DatabaseUtils.queryNumEntries(mReadableDB,ITEM_TABLE,KEY_ID + " =?",args);
+
+        if (c>0)
+            mWritableDB.update(ITEM_TABLE,values,KEY_ID + " = ?",args);
+        else
+            mWritableDB.insert(ITEM_TABLE,null,values);
+
+    }
+
+    public void addOrUpdate(ConfirmOrder order) {
+
+        if (mReadableDB == null) {
+            mReadableDB = getReadableDatabase();
+        }
+
+        if (mWritableDB == null) {
+            mWritableDB = getWritableDatabase();
+        }
+
+        ContentValues values = new ContentValues();
+        values.put(KEY_ORDER_ID, order.getmId());
+        values.put(KEY_ORDER_NUMBER, order.getOrderNumber());
+        values.put(KEY_ORDER_ITEM, order.getOrderItem());
+
+
+        String[] args =  new String[]{String.valueOf(order.getmId())};
+
+        long c = DatabaseUtils.queryNumEntries(mReadableDB,ORDER_TABLE,KEY_ORDER_NUMBER + " =?",args);
 
         if (c>0)
             mWritableDB.update(ITEM_TABLE,values,KEY_ID + " = ?",args);

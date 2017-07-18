@@ -12,6 +12,37 @@ public class ConfirmOrder {
     private String surname;
     private String address;
     private String city;
+    private Integer mId;
+    private Integer orderNumber;
+    private Integer orderItem;
+
+
+    public Integer getOrderItem() {
+        return orderItem;
+    }
+
+    public void setOrderItem(Integer orderItem) {
+        this.orderItem = orderItem;
+    }
+
+    public Integer getmId() {
+        return mId;
+    }
+
+    public void setmId(int mId) {
+        this.mId = mId;
+    }
+
+
+    public Integer getOrderNumber() {
+        return orderNumber;
+    }
+
+    public void setOrderNumber(int orderNumber) {
+        this.orderNumber = orderNumber;
+    }
+
+
 
     public ConfirmOrder() {
     }

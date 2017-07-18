@@ -22,7 +22,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 import sophia.com.ecommerce2.data.Item;
 import sophia.com.ecommerce2.network.EcommerceService;
 
-public class ProductViewActivity extends AppCompatActivity {
+public class ProductViewActivity extends BaseActivity {
     private EcommerceOpenHelper mDB;
     private NumberFormat nf = NumberFormat.getCurrencyInstance(Locale.ITALY);
     private Item item;
