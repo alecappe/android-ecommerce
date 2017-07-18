@@ -298,7 +298,7 @@ public class EcommerceOpenHelper extends SQLiteOpenHelper {
 
     }
 
-    public List<Item> getOrder(int orderNum){
+    public ConfirmOrder getOrder(int orderNum){
 
         ConfirmOrder order = new ConfirmOrder();
 //        order.setCart();
@@ -328,12 +328,12 @@ public class EcommerceOpenHelper extends SQLiteOpenHelper {
 
                 //orders.add(entry);
             }
-
+            order.setCart(list);
         } catch (Exception e) {
             Log.d(TAG, "EXCEPTION! " + e);
         } finally {
             cursor.close();
-            return list;
+            return order;
         }
     }
 

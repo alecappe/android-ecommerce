@@ -24,6 +24,7 @@ public class OrderDone extends AppCompatActivity {
     private String city;
     private List<Item> cart;
     private EcommerceOpenHelper mDb;
+    private ConfirmOrder order;
 
     private RecyclerView shoppingCartRecyclerView;
 
@@ -48,7 +49,7 @@ public class OrderDone extends AppCompatActivity {
         shoppingCartRecyclerView = (RecyclerView)findViewById(R.id.order_recycler);
         LinearLayoutManager mLayoutManager = new LinearLayoutManager((this));
         List<Item> itemList = new ArrayList<>();
-        itemList = mDb.getOrder(577);
+        order = mDb.getOrder(577);
         Log.d("LISTA: ", String.valueOf(itemList));
         ShoppingCart.getInstance().getCart().clear();
 
